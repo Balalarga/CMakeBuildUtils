@@ -1,0 +1,11 @@
+
+macro(ListOfDirectChildDirectories Result Directory)
+    file(GLOB sub-dir LIST_DIRECTORIES true RELATIVE ${Directory} ${Directory}/*)
+    set(list_of_dirs "")
+    foreach(dir ${sub-dir})
+        if(IS_DIRECTORY ${Directory}/${dir})
+            set(list_of_dirs ${list_of_dirs} ${dir})
+        endif()
+    endforeach()
+    set(${Result} ${list_of_dirs})
+endmacro()
