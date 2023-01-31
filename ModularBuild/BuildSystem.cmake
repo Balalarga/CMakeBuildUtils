@@ -1,20 +1,12 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(MODULAR_BUILD_SOURCE_DIR Source)
-
-macro(DefineDefaultModule ModuleName)
-    project(${ModuleName} LANGUAGES CXX)
+macro(DefineDefaultModule ModuleName SourceDir)
     file(GLOB_RECURSE PROJECT_SOURCES
-        ${MODULAR_BUILD_SOURCE_DIR}/*.cpp
-        ${MODULAR_BUILD_SOURCE_DIR}/*.h
-        ${MODULAR_BUILD_SOURCE_DIR}/*.hpp)
+        ${SourceDir}/*.cpp
+        ${SourceDir}/*.h
+        ${SourceDir}/*.hpp)
     add_library(${ModuleName} ${PROJECT_SOURCES})
-    target_include_directories(${ModuleName} PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${MODULAR_BUILD_SOURCE_DIR}/${ModuleName}>
-        $<INSTALL_INTERFACE:${MODULAR_BUILD_SOURCE_DIR}/${ModuleName}>)
-    target_include_directories(${ModuleName} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${MODULAR_BUILD_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:${MODULAR_BUILD_SOURCE_DIR}>)
+    target_include_directories(${ModuleName} PUBLIC ${SourceDir})
 endmacro()
 
 macro(AddPublicModuleDependencies ModuleName)
@@ -37,20 +29,20 @@ macro(AddPrivateModuleDependencies ModuleName)
     endforeach()
 endmacro()
 
-macro(DefineFolderNamedModule)
+macro(DefineFolderNamedModule SourceDir)
     get_filename_component(ModuleName ${CMAKE_CURRENT_SOURCE_DIR} NAME)
     project(${ModuleName} LANGUAGES CXX)
     file(GLOB_RECURSE PROJECT_SOURCES
-        ${MODULAR_BUILD_SOURCE_DIR}/*.cpp
-        ${MODULAR_BUILD_SOURCE_DIR}/*.h
-        ${MODULAR_BUILD_SOURCE_DIR}/*.hpp)
+        ${SourceDir}/*.cpp
+        ${SourceDir}/*.h
+        ${SourceDir}/*.hpp)
     add_library(${ModuleName} ${PROJECT_SOURCES})
     target_include_directories(${ModuleName} PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${MODULAR_BUILD_SOURCE_DIR}/${ModuleName}>
-        $<INSTALL_INTERFACE:${MODULAR_BUILD_SOURCE_DIR}/${ModuleName}>)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}/${ModuleName}>
+        $<INSTALL_INTERFACE:${SourceDir}/${ModuleName}>)
     target_include_directories(${ModuleName} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${MODULAR_BUILD_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:${MODULAR_BUILD_SOURCE_DIR}>)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}>
+        $<INSTALL_INTERFACE:${SourceDir}>)
 endmacro()
 
 macro(AddInterfaceModules Target BaseDir)
